@@ -4,39 +4,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $correoElectronico = $_POST['CorreoElectronico'];
         $contrasena = $_POST['Contrasena'];
         
-        // Validar que las contraseñas coincidan
-        //if($contrasena != $contrasenaRepetida) {
-        //   echo "Las contraseñas no coinciden.";
-        //exit; // Detener la ejecución del script si las contraseñas no coinciden
-        //}
+        try {
+            // Conectar a la base de datos utilizando PDO
+            $conexion = new PDO('mysql:host=db;dbname=Usuario', 'root', '1234');
+            $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Realizar cualquier otra validación necesaria aquí
+            // Preparar la consulta SQL para seleccionar datos
+            $stmt = $conexion->prepare("SELECT id_Usuario, Nombre FROM tbl_Usuario WHERE CorreoElectronico = ? AND Contrasena = ?");
+            $stmt->execute([$correoElectronico, $contrasena]);
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Conectar a la base de datos
-        $conexion = new mysqli('db', 'root', '1234', 'Usuario');
-
-        if($conexion->connect_error) {
-            die("Error de conexión: " . $conexion->connect_error);
+            if ($resultado) {
+                // Inicio de sesión exitoso
+                echo "Inicio de sesión exitoso. ¡Bienvenido, " . $resultado['Nombre'] . "!";
+            } else {
+                echo "Correo electrónico o contraseña incorrectos. Por favor, inténtalo de nuevo.";
+            }
+        } catch(PDOException $e) {
+            echo "Error al iniciar sesión: " . $e->getMessage();
         }
 
-        // Insertar los datos en la base de datos
-        $stmt = $conexion->prepare("SELECT id_Usuario, Nombre FROM tbl_Usuario WHERE CorreoElectronico = ? AND Contrasena = ?");
-        $stmt->bind_param("ss", $correoElectronico, $contrasena);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-
-        if ($resultado->num_rows == 1) {
-            // Inicio de sesión exitoso
-            $usuario = $resultado->fetch_assoc();
-            echo "Inicio de sesión exitoso. ¡Bienvenido, " . $usuario['Nombre'] . "!";
-
-        // Cerrar la conexión y liberar los recursos
-        
-        }else {
-            echo "Correo electrónico o contraseña incorrectos. Por favor, inténtalo de nuevo.";
-        }
+        // Cerrar la conexión (no es necesario en PDO, pero se incluye por buenas prácticas)
+        unset($conexion);
     }
 }
-
-$stmt->close();
-$conexion->close();
+?>

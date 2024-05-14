@@ -7,9 +7,10 @@ services:
       - "8080:80"
     volumes:
       - .:/var/www/html
-      - ./php.ini:/usr/local/etc/php/php.ini
     depends_on:
       - db
+    networks:
+      - redBase
 
   db:
     ports:
@@ -20,3 +21,7 @@ services:
       MYSQL_DATABASE: Usuario
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - redBase
+networks:
+  redBase:
