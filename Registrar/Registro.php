@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Preparar la consulta SQL para insertar datos
-            $stmt = $conexion->prepare("INSERT INTO tbl_Usuario (Nombre, Apellido, CorreoElectronico, Contrasena) VALUES (?, ?, ?, ?)");
+            $stmt = $conexion->prepare("INSERT INTO usuario (Nombre, Apellido, CorreoElectronico, Contrasena) VALUES (?, ?, ?, ?)");
             
             // Ejecutar la consulta con los parámetros proporcionados
             $stmt->execute([$nombre, $apellido, $correoElectronico, $contrasena]);

@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
             // Preparar la consulta SQL para seleccionar datos
-            $stmt = $conexion->prepare("SELECT id_Usuario, Nombre, Apellido, correoElectronico FROM tbl_Usuario WHERE CorreoElectronico = ? AND Contrasena = ?");
+            $stmt = $conexion->prepare("SELECT id_Usuario, Nombre, Apellido, correoElectronico FROM usuario WHERE CorreoElectronico = ? AND Contrasena = ?");
             $stmt->execute([$correoElectronico, $contrasena]);
             $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -22,6 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
                 $_SESSION['Nombre'] = $resultado['Nombre'];
                 $_SESSION['correoElectronico'] = $resultado['correoElectronico'];
                 $_SESSION['Apellido'] = $resultado['Apellido'];
+
                 header("Location: /welcome.php");
                 exit();
             } else {
@@ -43,13 +44,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login y Registro con HTML5 y CSS3</title>
+    <title>Login</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <!-- Estilos CSS -->
     <link rel="stylesheet" href="../css/style.css">
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
     <!-- Animación de pantalla -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <!-- Script JavaScript para evitar que el usuario regrese a la página de inicio de sesión después de iniciar sesión -->
@@ -74,10 +73,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
             <section>
                 <form action="login.php" method="POST">
                     <h1>Inicia Sesión</h1>
-                    <img src="../icons-social/facebook.svg" title="Inicia Sesion con Facebook" alt="Inicia Sesion con Facebook">
-                    <img src="../icons-social/google.svg" title="Inicia Sesion con Google" alt="Inicia Sesion con Google">
-                    <img src="../icons-social/twitter.svg" title="Inicia Sesion con Twitter" alt="Inicia Sesion con Twitter">
-                    <img src="../icons-social/github.svg" title="Inicia Sesion con GitHub" alt="Inicia Sesion con GitHub">
 
                     <!-- Campo de correo electrónico -->
                     <input type="email" name="CorreoElectronico" placeholder="Correo electr&oacute;nico" required><br/>
